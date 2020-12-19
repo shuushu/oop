@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "commonjs",
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "lib": [
+      "dom",
+      "es2020"
+    ],
+    "rootDir": "src",
+    "moduleResolution": "node"
+  }
+}
