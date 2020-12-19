@@ -1,8 +1,12 @@
 /**
- * 추상팩토리: 대규모 변경이 필요한 경우, 여러 객체들이 대체 없이 같이 사용되어햐 하는 경우 유용
+ * 추상 팩토리 패턴을 사용하면 클라이언트에서 추상 인터페이스를 통해서 일련의 제품들을 공급받을 수 있다.
+ * (관련성을 갖는 클래스들의 집합을 생성, 다수의 팩토리 메소드패턴을 포함한다.)
+ * 이때, 실제로 어떤 제품이 생산되는지는 전혀 알 필요도 없다.
+ * 따라서 클라이언트와 팩토리에서 생산되는 제품을 분리시킬 수 있다.
+ * js는 클래스를 설명하는 인터페이스가 없다. 따라서 직접 클래스를 생성한다.
  */
 
-// 구상클래스1
+// ConcreteProduct: ConcreteFactory가 생성할 객체를 정의하고, AbstractFactory가 정의하는 인터페이스를 구현한다.
 const King = (() => {
   class King {
     makeDecision() {
@@ -14,7 +18,7 @@ const King = (() => {
   }
   return King;
 })();
-// 구상클래스2
+// ConcreteProduct: ConcreteFactory가 생성할 객체를 정의하고, AbstractFactory가 정의하는 인터페이스를 구현한다.
 const LordTywin = (() => {
   class LordTywin {
     makeDecision() {
@@ -51,28 +55,25 @@ class CourtSession {
 }
 
 /**
- * 다음을 분리한다. : 객체 생성, 객체 표현하는 방법
- * Builder : 빌더 인터페이스.
- * ConcreteBuilder : 빌더 인터페이스 구현체. 부품을 합성하는 방식에 따라 여러 구현체를 만든다.
- * Director : Builder를 사용해 객체를 생성한다.
- * Product : Director가 Builder로 만들어낸 결과물.
+ * Builder : 클래스의 구축을 단순화, 빌더를 구현할 때 복잡성을 감소.
+ * 새로운 빌더가 필요할 때 생성자 추가 없이 새로운 빌더를 연결한다. (복합 객체 생성)
  */
 const Game = {
-  // 구상클래스1
+  // Product : Director가 Builder로 만들어낸 결과물.
   Event: class {
     private name: string;
     constructor(name: string) {
       this.name = name;
     }
   },
-  // 구상클래스2 prize: 상품
+  // Product : Director가 Builder로 만들어낸 결과물.
   Prize: class {
     private name: string;
     constructor(name: string) {
       this.name = name;
     }
   },
-  // ConcreteBuilder
+  // ConcreteBuilder : 빌더 인터페이스 구현체. 부품을 합성하는 방식에 따라 여러 구현체를 만든다.
   Tournament: class {
     private events: Object[];
     constructor() {
@@ -82,7 +83,7 @@ const Game = {
       this.events.push(v);
     }
   },
-  // Product 토너먼트 팩토리
+  // Builder : 빌더 인터페이스.
   TournamentFactory: class {
     build() {
       const tournament = new Game.Tournament();
@@ -91,7 +92,7 @@ const Game = {
       return tournament;
     }
   },
-  // director(조합)
+  // Director : Builder를 사용해 객체를 생성한다.
   TournamentBuilder: class {
     build(abstractFactory: { build(): void }) {
       return abstractFactory.build();
@@ -99,33 +100,43 @@ const Game = {
   }
 };
 /**
- * 팩토리메소드
- * 부모(상위) 클래스 코드에 구체 클래스 이름을 감추기 위한 방법으로도 사용(객체 생성을 캡슐화)
- *
+ * 팩토리 메소드 패턴은 인터페이스를 어떻게 구현할지에 대한 결정 없이
+ * 클래스가 인터페이스의 새로운 인스턴스를 요청할 수 있도록 허용
  */
 const Religion = {
-  교회: class {},
-  불교: class {},
-  천주교: class {},
-  기타: class {},
-  GodFactory: class {
-    build(name: string) {
-      let value: Object;
+  교회: class {
+    prayTo() {}
+  }, //Product
+  불교: class {
+    prayTo() {}
+  }, //Product
+  천주교: class {
+    prayTo() {}
+  }, //Product
+  기타: class {
+    prayTo() {}
+  }, //Product
+  // ConcreteFactory: 구체적인 제품에 대한 객체를 생성하는 연산을 구현한다
+  GodFactory: (() => {
+    function GodFactory() {}
+    GodFactory.build = (name: string) => {
       switch (name) {
         case "교회":
-          value = new Religion.교회();
-          break;
+          return new Religion.교회();
         case "불교":
-          value = new Religion.불교();
-          break;
+          return new Religion.불교();
         case "천주교":
-          value = new Religion.천주교();
-          break;
+          return new Religion.천주교();
         default:
-          value = new Religion.기타();
-          break;
+          return new Religion.기타();
       }
-      return value;
+    };
+    return GodFactory;
+  })(),
+  // ProductFactory
+  Prayer: class {
+    build(godName: string) {
+      return Religion.GodFactory.build(godName).prayTo();
     }
   }
 };
