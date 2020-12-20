@@ -141,14 +141,12 @@ const Religion = {
   }
 };
 /**
- * 상글톤
+ * 상글톤: 실수로 복잡한 객체의 사본이 여러 개  생성되는 것을 방지
  * 장점: 메모리 낭비를 방지할, 무조건 한번 생성으로 전역성을 띄기에 다른 객체와 공유가 용이
- * 단점: 다른 객체간의 결함도가 높아짐, 사이드이펙트가 발생할 여지, 멀티 쓰래드환경에서 동기화 처리 문제(경함조건)
+ * 단점: 너무 많은 권한을 가질 수 있다. 다른 객체간의 결함도가 높아지며 사이드이펙트가 발생할 여지, 멀티 쓰래드환경에서 동기화 처리 문제(경함조건)
  */
-
 const Wall: any = class {
   private height: number;
-
   constructor() {
     this.height = 0;
     if (Wall._instance) {
@@ -167,5 +165,27 @@ Wall.getInstance = () => {
   return Wall._instance;
 };
 Wall._instance = null;
+/**
+ * 프로토타입(원형패턴)은 복잡한 객체를 한 번만 생성하고, 변화가 있는 다수의 객체로 복사 될 수 있도록 허용한다.
+ * 새로운 오브젝트를 지속적으로 생성 new 하는건 부담스러운 일이기 때문,
+ * 그보다 싼 비용인 본래의 오브젝트의 복사본을 만들어 내어 (서로 다른 인스턴스),
+ * 각 객체에 따라 데이터 수정을 해주는 방식으로 오브젝트를 생성
+ * 복제의 대상이 대규모 애플리케이션인지에 대한 판단이 선행되어야 한다.
+ */
+const Lannister = class {
+  //Prototype : 자신을 복제하는데 필요한 인터페이스를 정의
+  public age: number;
+  constructor() {
+    this.age = 0;
+  }
 
-export { LannisterFactory, Wall, Game, Religion, CourtSession };
+  //ConcretePrototype : 자신을 복제하는 연산을 구현
+  clone() {
+    let clone: { [index: string]: any } = new Lannister();
+    for (let attr in this) {
+      clone[attr] = this[attr];
+    }
+    return clone;
+  }
+};
+export { LannisterFactory, Wall, Game, Lannister, Religion, CourtSession };
