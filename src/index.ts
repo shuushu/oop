@@ -6,6 +6,8 @@ import {
   Game,
   CourtSession
 } from "./create";
+import { ShipAdapter } from "./structural";
+
 // [추상팩토리] Client: AbstractFactory 클래스에 선언된 인터페이스를 사용한다.
 const a1 = new CourtSession(new LannisterFactory());
 // Builder를 사용해 객체를 생성한다.
@@ -18,5 +20,6 @@ const wall = Wall.getInstance();
 const jj = new Lannister();
 jj.age = 13;
 const dd = jj.clone();
-console.log(dd);
-//console.log(wall, Wall);
+// [adapter] implementation
+const ship = new ShipAdapter();
+ship.turnLeft();
