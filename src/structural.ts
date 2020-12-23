@@ -23,4 +23,51 @@ const ShipAdapter = class {
   TurnRight() {}
   GoForward() {}
 };
-export { ShipAdapter };
+
+/**
+ * bridge: 일관된 인터페이스를 제공하여 동일하게 취급할 수 있다.
+ *
+ */
+// interface
+const Religion = {
+  OldGods: class {
+    prayTo() {}
+  },
+  DrownedGod: class {
+    prayTo() {}
+  },
+  SevenGods: class {
+    prayTo() {}
+  },
+  희생: class {},
+  공양: class {}
+};
+
+// bridgeAdapter
+const bridgeAdapter = {
+  OldGodsAdapter: class {
+    private _oldGods: { [index: string]: any };
+    constructor() {
+      this._oldGods = new Religion.OldGods();
+    }
+    prayTo() {
+      this._oldGods.prayTo(new Religion.희생());
+    }
+  },
+  DrownedGodAdapter: class {
+    private _humanGods: { [index: string]: any };
+    constructor() {
+      this._humanGods = new Religion.DrownedGod();
+    }
+    prayTo() {
+      this._humanGods.prayTo(new Religion.공양());
+    }
+  },
+  SevenGodsAdapter: class {
+    prayTo() {
+      console.log(`this._SevenGods.prayTo(new Religion.##());`);
+    }
+  }
+};
+
+export { ShipAdapter, bridgeAdapter };

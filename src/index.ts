@@ -6,7 +6,7 @@ import {
   Game,
   CourtSession
 } from "./create";
-import { ShipAdapter } from "./structural";
+import { ShipAdapter, bridgeAdapter } from "./structural";
 
 // [추상팩토리] Client: AbstractFactory 클래스에 선언된 인터페이스를 사용한다.
 const a1 = new CourtSession(new LannisterFactory());
@@ -23,3 +23,9 @@ const dd = jj.clone();
 // [adapter] implementation
 const ship = new ShipAdapter();
 ship.turnLeft();
+// [bridgeAdapter] implementation
+[
+  new bridgeAdapter.DrownedGodAdapter(),
+  new bridgeAdapter.OldGodsAdapter(),
+  new bridgeAdapter.SevenGodsAdapter()
+].forEach((inst) => inst.prayTo());
