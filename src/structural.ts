@@ -91,7 +91,7 @@ interface 구성 {
 }
 
 const 레시피 = {
-  // 리프노드
+  // 리프노드 base class
   재료: class implements 구성 {
     이름: string;
     칼로리: number;
@@ -111,6 +111,7 @@ const 레시피 = {
       return this.비타민;
     }
   },
+  // composite
   요리: class {
     이름: string;
     재료: 구성[];
@@ -146,4 +147,31 @@ const 레시피 = {
   }
 };
 
-export { ShipAdapter, bridgeAdapter, 레시피 };
+/**
+ * [decorator] 기존의 클래스를 형태나 동작을 변경하거나 확장하는 데 쓰임
+ * 어댑터나 브릿지 패턴과 유사한 원리로 동작, 상속이 제한적인 시나리오에 적합
+ */
+interface 아머 {
+  damege(): number;
+}
+const 상의 = {
+  // base class
+  티셔츠: class implements 아머 {
+    damege() {
+      return 100;
+    }
+  },
+  // decorator
+  조끼: class {
+    armor: 아머;
+    constructor(v: 아머) {
+      this.armor = v;
+    }
+    damege(hit: number) {
+      const caclu = this.armor.damege() - hit * 0.8;
+      return caclu > 0 ? caclu : "사망";
+    }
+  }
+};
+
+export { ShipAdapter, bridgeAdapter, 레시피, 상의 };
