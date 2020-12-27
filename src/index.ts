@@ -6,7 +6,7 @@ import {
   Game,
   CourtSession
 } from "./create";
-import { ShipAdapter, bridgeAdapter, 레시피, 상의 } from "./structural";
+import { ShipAdapter, bridgeAdapter, 레시피, 오늘, 상의 } from "./structural";
 
 // [추상팩토리] Client: AbstractFactory 클래스에 선언된 인터페이스를 사용한다.
 const a1 = new CourtSession(new LannisterFactory());
@@ -43,5 +43,8 @@ console.log(`${에그타르트.이름} 총 칼로리는 ${에그타르트.getCal
 console.log(`${에그타르트.이름} 들어간 재료는 ${에그타르트.getItem()}이다.`);
 
 const 조끼 = new 상의.조끼(new 상의.티셔츠());
-console.clear();
 console.log(조끼.damege(23));
+
+console.clear();
+const today = new 오늘.인터페이스();
+today.초기화();

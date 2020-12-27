@@ -1,5 +1,5 @@
 /**
- * [adapter] implementation의 인터페이스를 사용하기에 적합하지 않을때
+ * [adapter-호환성] implementation의 인터페이스를 사용하기에 적합하지 않을때
  * 리팩토링헤 필요힌  부분에 맞추지만, 다음 케이스 유용하다
  * 1. 제 3자가 작성한 코드에 들어 있으면 직접 접근이 불가능한 경우
  * 2. implementation이 애플리케이션의 인터페이스에 이미 사용되고 있는 경우
@@ -22,6 +22,68 @@ const ShipAdapter = class {
   }
   TurnRight() {}
   GoForward() {}
+};
+/**
+ * [facade-간편성]
+ * 간략화된 인터페이스를 제공하는 어댑터의패턴의 특별한 경우다.
+ * API를 다룰 때 유용,
+ */
+interface 데이터 {
+  update(time?: string): string;
+}
+interface 날짜 {
+  update(date: string): void;
+}
+interface 시간 {
+  update(time?: string): string;
+}
+interface 키워드 {
+  update(v: string): void;
+}
+const 오늘 = {
+  데이터: class implements 데이터 {
+    update() {
+      return "async 결과값";
+    }
+  },
+  날짜: class implements 날짜 {
+    update(data: string) {
+      // 지우기
+      // 그리기
+    }
+  },
+  시간: class implements 시간 {
+    update(data?: string) {
+      return "2020";
+    }
+  },
+  키워드: class {
+    init(data: string) {}
+    update(v: string) {}
+  },
+  인터페이스: class {
+    time: 시간;
+    data: 데이터;
+    date: 날짜;
+    word: 키워드;
+    constructor() {
+      this.data = new 오늘.데이터();
+      this.date = new 오늘.날짜();
+      this.time = new 오늘.시간();
+      this.word = new 오늘.키워드();
+    }
+    async 초기화() {
+      const DATA = await this.data.update();
+      await this.date.update(DATA);
+      await this.time.update(DATA);
+      await this.word.update(DATA);
+    }
+
+    시간업데이트() {
+      const v = this.data.update(this.time.update());
+      this.word.update(v);
+    }
+  }
 };
 
 /**
@@ -148,7 +210,7 @@ const 레시피 = {
 };
 
 /**
- * [decorator] 기존의 클래스를 형태나 동작을 변경하거나 확장하는 데 쓰임
+ * [decorator-확장성] 기존의 클래스를 형태나 동작을 변경하거나 확장하는 데 쓰임
  * 어댑터나 브릿지 패턴과 유사한 원리로 동작, 상속이 제한적인 시나리오에 적합
  */
 interface 아머 {
@@ -174,4 +236,4 @@ const 상의 = {
   }
 };
 
-export { ShipAdapter, bridgeAdapter, 레시피, 상의 };
+export { ShipAdapter, bridgeAdapter, 레시피, 상의, 오늘 };
